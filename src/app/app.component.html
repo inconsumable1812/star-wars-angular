@@ -1,8 +1,4 @@
 <div>
-  <button class="btn" (click)="increase()">+1</button>
-  <button class="btn" [disabled]="disabled" (click)="decrease()">-1</button>
-  <button class="btn" [disabled]="disabled" (click)="clear()">Clear</button>
-
-  <p>Счетчик: {{ counter }}</p>
-  <app-xyz></app-xyz>
+  <p *ngIf="loading">Loading...</p>
+  <router-outlet></router-outlet>
 </div>

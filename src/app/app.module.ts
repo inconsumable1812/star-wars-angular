@@ -15,6 +15,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { AppEffects } from './app.effects';
 import { metaReducers, reducers } from './reducers';
+import { PeopleComponent } from './people/people.component';
+import { PeopleCardComponent } from './people-card/people-card.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { metaReducers, reducers } from './reducers';
     XyzComponent,
     PlanetsCardComponent,
     PlanetsComponent,
-    GetInfoComponent
+    GetInfoComponent,
+    PeopleComponent,
+    PeopleCardComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Planet } from 'src/api/types';
+import { planetsResultSelector } from '../reducers/getData/getData.selectors';
 
 @Component({
   selector: 'app-planets',
@@ -6,9 +10,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./planets.component.scss']
 })
 export class PlanetsComponent implements OnInit {
-  posts: number[] = [1, 2];
+  planets$: Observable<Planet[]> = this.store.select(planetsResultSelector);
 
-  constructor() {}
+  constructor(private store: Store) {}
 
   ngOnInit(): void {}
 }

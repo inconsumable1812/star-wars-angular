@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { fetchPlanets } from 'src/api/fetchPlanets';
+import { Planet, Planets } from 'src/api/types';
+import { defaults } from 'lodash';
 
 @Component({
   selector: 'app-root',
@@ -7,22 +10,46 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'star-wars-angular';
+  planets: Planets = { count: 0, next: null, previous: null, results: [] };
+  loading = true;
 
-  counter = 0;
+  async ngOnInit(): Promise<void> {
+    const data = await fetchPlanets({ page: '1' });
 
-  get disabled() {
-    return this.counter <= 0;
-  }
+    if (data instanceof Error) {
+      return;
+    }
 
-  increase() {
-    this.counter += 1;
-  }
+    const allPlanets: Planet[] = [];
 
-  decrease() {
-    this.counter -= 1;
-  }
+    if (data.results !== undefined) {
+      allPlanets.push(...data.results);
+    }
 
-  clear() {
-    this.counter = 0;
+    if (data.count !== undefined) {
+      const allPlanetsCount = data.count;
+      const planetsInOnePage = 10;
+
+      for (
+        let index = 2;
+        index <= allPlanetsCount / planetsInOnePage;
+        index++
+      ) {
+        const result = await fetchPlanets({ page: index.toString() });
+
+        if (result instanceof globalThis.Error) {
+          return Promise.reject(result);
+        }
+
+        if (result.results !== undefined) {
+          allPlanets.push(...result.results);
+        }
+      }
+    }
+
+    data.results = [...allPlanets];
+
+    this.planets = defaults(data, this.planets);
+    this.loading = false;
   }
 }

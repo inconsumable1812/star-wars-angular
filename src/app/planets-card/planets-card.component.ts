@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Planet } from 'src/api/types';
 
 @Component({
   selector: 'app-planets-card',
@@ -6,10 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./planets-card.component.scss']
 })
 export class PlanetsCardComponent implements OnInit {
+  @Input()
+  planet!: Planet;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
