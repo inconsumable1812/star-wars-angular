@@ -7,4 +7,22 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'star-wars-angular';
+
+  counter = 0;
+
+  get disabled() {
+    return this.counter <= 0;
+  }
+
+  increase() {
+    this.counter += 1;
+  }
+
+  decrease() {
+    this.counter -= 1;
+  }
+
+  clear() {
+    this.counter = 0;
+  }
 }

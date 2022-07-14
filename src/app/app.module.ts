@@ -1,18 +1,44 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { XyzComponent } from './xyz/xyz.component';
+import { PlanetsCardComponent } from './planets-card/planets-card.component';
+import { PlanetsComponent } from './planets/planets.component';
+import { GetInfoComponent } from './get-info/get-info.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { AppEffects } from './app.effects';
+import { metaReducers, reducers } from './reducers';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    XyzComponent,
+    PlanetsCardComponent,
+    PlanetsComponent,
+    GetInfoComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers
+    }),
+    EffectsModule.forRoot([AppEffects]),
+    StoreRouterConnectingModule.forRoot(),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
