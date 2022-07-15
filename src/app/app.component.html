@@ -1,4 +1,4 @@
 <div>
   <p *ngIf="loading">Loading...</p>
-  <router-outlet></router-outlet>
+  <router-outlet *ngIf="!loading"></router-outlet>
 </div>

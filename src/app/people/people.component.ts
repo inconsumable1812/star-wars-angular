@@ -39,20 +39,28 @@ export class PeopleComponent implements OnInit {
     this.planets$.subscribe((planets) => (this.planets = planets));
   }
 
-  getCurrentPlanet() {
+  getCurrentPlanet(): null | void {
     this.getPlanets();
 
-    this.currentPlanet = this.planets.filter(
+    const currentPlanetArray = this.planets.filter(
       (planet) => planet.name === this.currentPlanetName
-    )[0];
+    );
+
+    if (currentPlanetArray.length === 0) {
+      window.location.href = '/';
+      return null;
+    }
+
+    this.currentPlanet = currentPlanetArray[0];
   }
 
   getPeople() {
     this.people$.subscribe((people) => (this.people = people));
   }
 
-  getCurrentPeople() {
-    this.getCurrentPlanet();
+  getCurrentPeople(): null | void {
+    const response = this.getCurrentPlanet();
+    if (response === null) return null;
     this.getPeople();
     this.allPeopleInCurrentPlanet = this.currentPlanet.residents
       .map((url) => this.people.filter((p) => p.url === url))
