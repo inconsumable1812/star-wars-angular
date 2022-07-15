@@ -1,4 +1,4 @@
-<a routerLink="/planet">
+<a class="link" [routerLink]="['/planet', planet.name]">
   <div class="container">
     <h2 class="planet-name">{{ planet.name }}</h2>
     <div class="planet-info">

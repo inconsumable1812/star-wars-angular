@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { fetchPlanets } from 'src/api/fetchPlanets';
-import { Planet, Planets } from 'src/api/types';
+import { People, Peoples, Planet, Planets } from 'src/api/types';
 import { defaults } from 'lodash';
+import { Store } from '@ngrx/store';
+import { people, planets } from './reducers/getData/getData.actions';
+import { fetchPeople } from 'src/api/fetchPeople';
 
 @Component({
   selector: 'app-root',
@@ -11,13 +14,28 @@ import { defaults } from 'lodash';
 export class AppComponent {
   title = 'star-wars-angular';
   planets: Planets = { count: 0, next: null, previous: null, results: [] };
+  peoples: Peoples = { count: 0, next: null, previous: null, results: [] };
   loading = true;
 
-  async ngOnInit(): Promise<void> {
+  constructor(private store: Store) {}
+
+  async ngOnInit() {
+    await this.getAllData();
+    this.store.dispatch(planets({ planets: this.planets }));
+    this.store.dispatch(people({ people: this.peoples }));
+  }
+
+  async getAllData() {
+    await this.getAllPlanets();
+    await this.getAllPeople();
+    this.loading = false;
+  }
+
+  async getAllPlanets() {
     const data = await fetchPlanets({ page: '1' });
 
     if (data instanceof Error) {
-      return;
+      throw data;
     }
 
     const allPlanets: Planet[] = [];
@@ -38,7 +56,7 @@ export class AppComponent {
         const result = await fetchPlanets({ page: index.toString() });
 
         if (result instanceof globalThis.Error) {
-          return Promise.reject(result);
+          throw result;
         }
 
         if (result.results !== undefined) {
@@ -50,6 +68,40 @@ export class AppComponent {
     data.results = [...allPlanets];
 
     this.planets = defaults(data, this.planets);
-    this.loading = false;
+  }
+
+  async getAllPeople() {
+    const data = await fetchPeople({ page: '1' });
+
+    if (data instanceof Error) {
+      throw data;
+    }
+
+    const allPeople: People[] = [];
+
+    if (data.results !== undefined) {
+      allPeople.push(...data.results);
+    }
+
+    if (data.count !== undefined) {
+      const allPeopleCount = data.count;
+      const peopleInOnePage = 10;
+
+      for (let index = 2; index <= allPeopleCount / peopleInOnePage; index++) {
+        const result = await fetchPeople({ page: index.toString() });
+
+        if (result instanceof globalThis.Error) {
+          throw result;
+        }
+
+        if (result.results !== undefined) {
+          allPeople.push(...result.results);
+        }
+      }
+    }
+
+    data.results = [...allPeople];
+
+    this.peoples = defaults(data, this.peoples);
   }
 }

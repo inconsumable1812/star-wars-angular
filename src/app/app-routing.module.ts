@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'planet',
     component: PeopleComponent
+  },
+  {
+    path: 'planet/:planetName',
+    component: PeopleComponent
   }
 ];
 
